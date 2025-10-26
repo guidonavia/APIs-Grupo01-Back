@@ -18,6 +18,9 @@ public class Producto {
     private String nombre;
     private double precio;
     private String descripcion;
+    
+    @Column(nullable = false)
+    private Integer stock;
 
 
     //TODO: fromano - Modelar categorias y relaciones
