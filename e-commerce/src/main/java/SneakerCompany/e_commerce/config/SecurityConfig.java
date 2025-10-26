@@ -122,6 +122,9 @@ public class SecurityConfig {
                         // Rutas de pedidos solo para usuarios autenticados
                         .requestMatchers("/api/pedidos/**").authenticated()
 
+                        // Ruta de checkout solo para usuarios autenticados
+                        .requestMatchers("/api/checkout/**").authenticated()
+
                         // Cualquier otra ruta requiere autenticación
                         // con esta linea abarca requiere que todos los endpoints esten autenticados
                         // no seía necesario post, put, delete /api/productos , api/pedidos
