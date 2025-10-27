@@ -40,17 +40,26 @@ public class ProductoService {
     }
 
     public Producto updateProducto(Long id, ProductoDTO productoDTO) {
-        // if(validarCreador()){} else {throw new UnauthorizedException("No tienes permiso para eliminar este producto");}
         return productoRepository.findById(id)
             .map(producto -> {
                 producto.setNombre(productoDTO.getNombre());
                 producto.setDescripcion(productoDTO.getDescripcion());
                 producto.setPrecio(productoDTO.getPrecio());
                 producto.setStock(productoDTO.getStock());
+                producto.setFotos(productoDTO.getFotos());
+
+                // Validar y buscar la categoría
+                if (productoDTO.getCategoriaId() == null) {
+                    throw new RuntimeException("El ID de la categoría no puede ser nulo.");
+                }
                 var categoria = categoriaService.getCategoriaById(productoDTO.getCategoriaId());
+                if (categoria == null) {
+                    throw new RuntimeException("Categoría no encontrada con ID: " + productoDTO.getCategoriaId());
+                }
                 producto.setCategoria(categoria);
+                
                 return productoRepository.save(producto);
             })
-            .orElse(null);
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
     }
 }

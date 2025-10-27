@@ -38,14 +38,15 @@ public class ProductoController {
 
     //https://localhost:8080/api/productos con metodo post http, enviar un body
     @PostMapping
-    public Producto addProducto(@RequestBody Producto producto) {
-        System.out.println("Guardando producto en el controller: " + producto);
+    public Producto addProducto(@RequestBody Producto producto) {        
         return productoService.saveProducto(producto);
     }
     
     //https://localhost:8080/api/productos/1 con metodo put http, enviar un body
     @PutMapping("/{id}")
     public Producto updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
+        System.out.println("ID del prod: " + id);
+        System.out.println("producto: " + productoDTO);
         return productoService.updateProducto(id, productoDTO);
     }
 
