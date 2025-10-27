@@ -26,6 +26,10 @@ public class ProductoService {
         return productoRepository.findById(id).orElse(null);
     }
 
+    public List<Producto> getProductoByCategoria(String categoria) {
+        return productoRepository.findByCategoria(categoria);
+    }
+
     public Producto saveProducto(Producto producto) {
         return productoRepository.save(producto);
     }

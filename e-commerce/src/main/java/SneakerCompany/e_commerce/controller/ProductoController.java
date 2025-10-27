@@ -29,6 +29,13 @@ public class ProductoController {
         return productoService.getProductoById(id);
     }
 
+    
+    @GetMapping("/categoria/{categoria}")
+    public List<Producto> getProductoByCategoria(@PathVariable String categoria) {
+        System.out.println("Categoria recibida: " + categoria);
+        return productoService.getProductoByCategoria(categoria);
+    }
+
     //https://localhost:8080/api/productos con metodo post http, enviar un body
     @PostMapping
     public Producto addProducto(@RequestBody Producto producto) {
