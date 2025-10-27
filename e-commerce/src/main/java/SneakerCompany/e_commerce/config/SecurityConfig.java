@@ -103,8 +103,9 @@ public class SecurityConfig {
                         // Rutas públicas que no requieren autenticación
                         //el controller /api/auth puede ser solicitado por cualquier usuario
                         .requestMatchers("/api/auth/**").permitAll()
-                        //el endpoint /api/productos con metodo get es público, cualquiera puede ver los productos
+                        //el endpoint /api/productos con metodo get es público, cualquiera puede ver los productos, lo mismo para catalogo.
                         .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
+                        .requestMatchers("/api/catalogo/**").permitAll()
 
                         // Rutas que requieren autenticación para modificar productos
                         //solo los usuarios autenticados pueden crear un producto
