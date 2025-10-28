@@ -111,4 +111,24 @@ public class CheckoutService {
             .mensaje("Compra realizada exitosamente")
             .build();
     }
+
+    public List<CheckoutResponseDTO> getAllPedidos() {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+        List<CheckoutResponseDTO> responseList = new ArrayList<>();
+
+        for (Pedido pedido : pedidos) {
+            CheckoutResponseDTO responseDTO = CheckoutResponseDTO.builder()
+                .pedidoId(pedido.getId())
+                .usuarioId(pedido.getUsuario().getId())
+                .nombreUsuario(pedido.getUsuario().getNombre() + " " + pedido.getUsuario().getApellido())
+                .fechaCompra(pedido.getFechaCompra())
+                .total(pedido.getTotal())
+                .mensaje("Detalle del pedido")
+                .build();
+            responseList.add(responseDTO);
+        }
+
+        return responseList;
+    }
+    
 }

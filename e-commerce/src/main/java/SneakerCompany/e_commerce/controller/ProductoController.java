@@ -24,12 +24,13 @@ public class ProductoController {
     }
 
     // https://localhost:8080/api/productos/1 con metodo get http
+
+    //TODO: fromano - devolver ProductoDTO en vez de Producto, y response entity.
     @GetMapping("/{id}")
     public Producto getProductoById(@PathVariable Long id) {
         return productoService.getProductoById(id);
     }
 
-    
     @GetMapping("/categoria/{categoria}")
     public List<Producto> getProductoByCategoria(@PathVariable String categoria) {
         System.out.println("Categoria recibida: " + categoria);
