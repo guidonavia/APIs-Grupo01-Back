@@ -3,8 +3,11 @@ package SneakerCompany.e_commerce.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import SneakerCompany.e_commerce.dto.ProductoDTO;
 import SneakerCompany.e_commerce.model.Producto;
 import SneakerCompany.e_commerce.service.ProductoService;
 // import com.api.e_commerce.dto.ProductoUpdateDTO;
@@ -27,8 +30,10 @@ public class ProductoController {
 
     //TODO: fromano - devolver ProductoDTO en vez de Producto, y response entity.
     @GetMapping("/{id}")
-    public Producto getProductoById(@PathVariable Long id) {
-        return productoService.getProductoById(id);
+    public ResponseEntity<ProductoDTO> getProductoById(@PathVariable Long id) {
+
+        ProductoDTO response = productoService.getProductoById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/categoria/{categoria}")

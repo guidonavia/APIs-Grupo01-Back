@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import SneakerCompany.e_commerce.dto.ProductoDTO;
 import SneakerCompany.e_commerce.model.Producto;
 import SneakerCompany.e_commerce.repository.ProductoRepository;
 // import com.api.e_commerce.dto.ProductoUpdateDTO;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ProductoService {
     
     @Autowired
@@ -22,8 +25,15 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
-    public Producto getProductoById(Long id) {
-        return productoRepository.findById(id).orElse(null);
+    public ProductoDTO getProductoById(Long id) {
+        Producto producto = productoRepository.findById(id).orElse(null);
+        
+        return ProductoDTO.builder()
+            .nombre(producto.getNombre())
+            .descripcion(producto.getDescripcion())
+            .precio(producto.getPrecio())
+            .stock(producto.getStock())
+            .build();
     }
 
     public List<Producto> getProductoByCategoria(String categoria) {
