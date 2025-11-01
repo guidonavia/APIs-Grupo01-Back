@@ -3,14 +3,9 @@ package SneakerCompany.e_commerce.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import SneakerCompany.e_commerce.dto.ProductoDTO;
 import SneakerCompany.e_commerce.model.Producto;
@@ -31,9 +26,19 @@ public class ProductoController {
     }
 
     // https://localhost:8080/api/productos/1 con metodo get http
+
+    //TODO: fromano - devolver ProductoDTO en vez de Producto, y response entity.
     @GetMapping("/{id}")
-    public Producto getProductoById(@PathVariable Long id) {
-        return productoService.getProductoById(id);
+    public ResponseEntity<ProductoDTO> getProductoById(@PathVariable Long id) {
+
+        ProductoDTO response = productoService.getProductoById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/categoria/{categoria}")
+    public List<Producto> getProductoByCategoria(@PathVariable String categoria) {
+        System.out.println("Categoria recibida: " + categoria);
+        return productoService.getProductoByCategoria(categoria);
     }
 
     //https://localhost:8080/api/productos con metodo post http, enviar un body
