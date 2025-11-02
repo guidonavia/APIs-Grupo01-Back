@@ -146,10 +146,10 @@ public class ProductoService {
         productoRepository.deleteById(id);
     }
 
-    public Producto updateProducto(Long id, ProductoDTO productoDTO) {
+    public ProductoDTO updateProducto(Long id, ProductoDTO productoDTO) {
         validarCreador(id);
-        
-        return productoRepository.findById(id)
+
+        Producto productoActualizado = productoRepository.findById(id)
             .map(producto -> {
                 producto.setNombre(productoDTO.getNombre());
                 producto.setDescripcion(productoDTO.getDescripcion());
@@ -166,9 +166,20 @@ public class ProductoService {
                     throw new RuntimeException("Categoría no encontrada con ID: " + productoDTO.getCategoriaId());
                 }
                 producto.setCategoria(categoria);
-                
+
                 return productoRepository.save(producto);
             })
             .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+
+        // Convertir el producto actualizado a ProductoDTO
+        return ProductoDTO.builder()
+            .id(productoActualizado.getId())
+            .nombre(productoActualizado.getNombre())
+            .descripcion(productoActualizado.getDescripcion())
+            .precio(productoActualizado.getPrecio())
+            .stock(productoActualizado.getStock())
+            .fotos(productoActualizado.getFotos())
+            .categoriaId(productoActualizado.getCategoria().getId())
+            .build();
     }
 }

@@ -56,7 +56,7 @@ public class ProductoController {
     
     //https://localhost:8080/api/productos/1 con metodo put http, enviar un body
     @PutMapping("/{id}")
-    public Producto updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
+    public ProductoDTO updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
         return productoService.updateProducto(id, productoDTO);
     }
 
