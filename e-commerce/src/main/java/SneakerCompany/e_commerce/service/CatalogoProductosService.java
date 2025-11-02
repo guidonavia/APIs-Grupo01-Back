@@ -1,10 +1,10 @@
 package SneakerCompany.e_commerce.service;
 
-import SneakerCompany.e_commerce.catalogo.dto.ProductoResumenDTO;
-import SneakerCompany.e_commerce.catalogo.dto.ProductoDetalleDTO;
-import SneakerCompany.e_commerce.catalogo.dto.CategoriaDTO;
-import SneakerCompany.e_commerce.catalogo.dto.DisponibilidadDTO;
-import SneakerCompany.e_commerce.catalogo.ProductoCatalogoMapper;
+import SneakerCompany.e_commerce.dto.CategoriaDTO;
+import SneakerCompany.e_commerce.dto.DisponibilidadDTO;
+import SneakerCompany.e_commerce.dto.ProductoDetalleDTO;
+import SneakerCompany.e_commerce.dto.ProductoResumenDTO;
+import SneakerCompany.e_commerce.mapper.ProductoCatalogoMapper;
 import SneakerCompany.e_commerce.model.Producto;
 import SneakerCompany.e_commerce.model.Categoria;
 import SneakerCompany.e_commerce.repository.ProductoRepository;
@@ -27,8 +27,8 @@ public class CatalogoProductosService {
     }
 
     public Page<ProductoResumenDTO> listarProductos(Pageable pageable) {
-        Page<Producto> productos = productoRepository.findByActivoTrue(pageable);
-        return productos.map(ProductoCatalogoMapper::toResumen);
+        return productoRepository.findByStockGreaterThanEqual(1, pageable)
+            .map(ProductoCatalogoMapper::toResumen);
     }
 
     public List<CategoriaDTO> listarCategorias() {

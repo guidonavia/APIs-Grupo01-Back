@@ -1,4 +1,4 @@
-package SneakerCompany.e_commerce.catalogo.dto;
+package SneakerCompany.e_commerce.dto;
 
 import java.io.Serializable;
 

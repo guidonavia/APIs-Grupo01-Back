@@ -1,4 +1,4 @@
-package SneakerCompany.e_commerce.catalogo.dto;
+package SneakerCompany.e_commerce.dto;
 
 import java.io.Serializable;
 import java.util.List;
@@ -35,3 +35,4 @@ public class ProductoDetalleDTO implements Serializable {
     public String getUrlImagenPrincipal() { return urlImagen; }
     public String getCategoria() { return categoria; }
 }
+ 

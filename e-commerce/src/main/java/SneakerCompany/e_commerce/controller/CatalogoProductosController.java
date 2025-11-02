@@ -1,9 +1,9 @@
 package SneakerCompany.e_commerce.controller;
 
-import SneakerCompany.e_commerce.catalogo.dto.ProductoResumenDTO;
-import SneakerCompany.e_commerce.catalogo.dto.ProductoDetalleDTO;
-import SneakerCompany.e_commerce.catalogo.dto.CategoriaDTO;
-import SneakerCompany.e_commerce.catalogo.dto.DisponibilidadDTO;
+import SneakerCompany.e_commerce.dto.CategoriaDTO;
+import SneakerCompany.e_commerce.dto.DisponibilidadDTO;
+import SneakerCompany.e_commerce.dto.ProductoDetalleDTO;
+import SneakerCompany.e_commerce.dto.ProductoResumenDTO;
 import SneakerCompany.e_commerce.service.CatalogoProductosService;
 
 import org.springframework.data.domain.Page;

@@ -1,6 +1,6 @@
-package SneakerCompany.e_commerce.catalogo;
-import SneakerCompany.e_commerce.catalogo.dto.ProductoResumenDTO;
-import SneakerCompany.e_commerce.catalogo.dto.ProductoDetalleDTO;
+package SneakerCompany.e_commerce.mapper;
+import SneakerCompany.e_commerce.dto.ProductoDetalleDTO;
+import SneakerCompany.e_commerce.dto.ProductoResumenDTO;
 import SneakerCompany.e_commerce.model.Producto;
 
 public class ProductoCatalogoMapper {
