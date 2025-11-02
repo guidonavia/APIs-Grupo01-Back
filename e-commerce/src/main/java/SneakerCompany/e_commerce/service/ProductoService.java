@@ -24,8 +24,19 @@ public class ProductoService {
     @Autowired
     private CategoriaService categoriaService;
 
-    public List<Producto> getAllProductos() {
-        return productoRepository.findAll();
+    public List<ProductoDTO> getAllProductos() {
+        List<Producto> productos = productoRepository.findAll();
+        return productos.stream() // Devuelvo los datos en base a la estructura del DTO
+            .map(producto -> ProductoDTO.builder()
+                .id(producto.getId())
+                .nombre(producto.getNombre())
+                .precio(producto.getPrecio())
+                .descripcion(producto.getDescripcion())
+                .stock(producto.getStock())
+                .fotos(producto.getFotos())
+                .categoriaId(producto.getCategoria().getId())
+                .build())
+            .collect(Collectors.toList());
     }
 
     public ProductoDTO getProductoById(Long id) {
