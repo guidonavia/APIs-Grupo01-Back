@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import SneakerCompany.e_commerce.dto.ProductoDTO;
 import SneakerCompany.e_commerce.model.Producto;
 import SneakerCompany.e_commerce.repository.ProductoRepository;
-// import com.api.e_commerce.dto.ProductoUpdateDTO;
 import lombok.RequiredArgsConstructor;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,6 +21,9 @@ public class ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
+    @Autowired
+    private CategoriaService categoriaService;
+
     public List<Producto> getAllProductos() {
         return productoRepository.findAll();
     }
@@ -29,33 +32,62 @@ public class ProductoService {
         Producto producto = productoRepository.findById(id).orElse(null);
         
         return ProductoDTO.builder()
+            .id(producto.getId())
             .nombre(producto.getNombre())
             .descripcion(producto.getDescripcion())
             .precio(producto.getPrecio())
             .stock(producto.getStock())
+            .fotos(producto.getFotos())
+            .categoriaId(producto.getCategoria().getId())
             .build();
     }
 
-    public List<Producto> getProductoByCategoria(String categoria) {
-        return productoRepository.findByCategoria(categoria);
+    public List<ProductoDTO> getProductoByCategoria(Long categoriaId) {
+        List<Producto> productos = productoRepository.findByCategoriaId(categoriaId);
+        return productos.stream() // Devuelvo los datos en base a la estructura del DTO
+            .map(producto -> ProductoDTO.builder()
+                .id(producto.getId())
+                .nombre(producto.getNombre())
+                .precio(producto.getPrecio())
+                .descripcion(producto.getDescripcion())
+                .stock(producto.getStock())
+                .fotos(producto.getFotos())
+                .categoriaId(producto.getCategoria().getId())
+                .build())
+            .collect(Collectors.toList());
     }
 
     public Producto saveProducto(Producto producto) {
+        System.out.println("Guardando producto en el service: " + producto);
         return productoRepository.save(producto);
     }
 
     public void deleteProducto(Long id) {
+        // if(validarCreador()){} else {throw new UnauthorizedException("No tienes permiso para eliminar este producto");}
         productoRepository.deleteById(id);
-    }    
-    // public Producto updateProducto(Long id, ProductoUpdateDTO productoDTO) {
-    //     return productoRepository.findById(id)
-    //         .map(producto -> {
-    //             producto.setNombre(productoDTO.getNombre());
-    //             producto.setDescripcion(productoDTO.getDescripcion());
-    //             producto.setPrecio(productoDTO.getPrecio());
-    //             producto.setStock(productoDTO.getStock());
-    //             return productoRepository.save(producto);
-    //         })
-    //         .orElse(null);
-    // }
+    }
+
+    public Producto updateProducto(Long id, ProductoDTO productoDTO) {
+        return productoRepository.findById(id)
+            .map(producto -> {
+                producto.setNombre(productoDTO.getNombre());
+                producto.setDescripcion(productoDTO.getDescripcion());
+                producto.setPrecio(productoDTO.getPrecio());
+                producto.setStock(productoDTO.getStock());
+                producto.setFotos(productoDTO.getFotos());
+
+                // Validar y buscar la categoría
+                if (productoDTO.getCategoriaId() == null) {
+                    throw new RuntimeException("El ID de la categoría no puede ser nulo.");
+                }
+                var categoria = categoriaService.getCategoriaById(productoDTO.getCategoriaId());
+                if (categoria == null) {
+                    throw new RuntimeException("Categoría no encontrada con ID: " + productoDTO.getCategoriaId());
+                }
+                producto.setCategoria(categoria);
+                
+                return productoRepository.save(producto);
+            })
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+    }
 }

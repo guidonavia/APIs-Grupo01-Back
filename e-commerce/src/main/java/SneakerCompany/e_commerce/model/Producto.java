@@ -1,11 +1,18 @@
 package SneakerCompany.e_commerce.model;
 
-//import java.util.ArrayList;
-//import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
-
 
 @Data
 @Entity(name = "productos")
@@ -16,24 +23,23 @@ public class Producto {
 
     @Column(nullable = false, length = 100)
     private String nombre;
+
     private double precio;
+
     private String descripcion;
 
     @Column(nullable = false)
-    private String categoria;
-    
-    @Column(nullable = false)
     private Integer stock;
 
+    @ElementCollection
+    private List<String> fotos = new ArrayList<>();
 
-    //TODO: fromano - Modelar categorias y relaciones
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
-    /* @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "productos_categorias",
-        joinColumns = @JoinColumn(name = "producto_id"),
-        inverseJoinColumns = @JoinColumn(name = "categoria_id")
-    )
-    private List<Categoria> categorias = new ArrayList<>(); */
-        
-}   
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario creador;
+    
+}

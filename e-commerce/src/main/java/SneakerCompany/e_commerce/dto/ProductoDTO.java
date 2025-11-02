@@ -1,8 +1,10 @@
 package SneakerCompany.e_commerce.dto;
 
-import lombok.Data;
-import lombok.Builder;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -10,10 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductoDTO {
-    
+    private Long id;
     private String nombre;
+    private double precio;
     private String descripcion;
-    private Double precio;
     private Integer stock;
-
+    private List<String> fotos;
+    private Long categoriaId;
 }

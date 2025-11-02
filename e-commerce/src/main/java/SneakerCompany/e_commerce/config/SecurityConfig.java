@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import SneakerCompany.e_commerce.repository.UsuarioRepository;
 import SneakerCompany.e_commerce.security.JwtFilter;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 // Habilita la seguridad web de Spring Security
 @EnableWebSecurity
 // Genera un constructor con los campos final requeridos lombok 
+@EnableTransactionManagement
 @RequiredArgsConstructor
 public class SecurityConfig {
 

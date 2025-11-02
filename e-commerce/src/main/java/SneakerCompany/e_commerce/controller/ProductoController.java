@@ -5,12 +5,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import SneakerCompany.e_commerce.dto.ProductoDTO;
 import SneakerCompany.e_commerce.model.Producto;
 import SneakerCompany.e_commerce.service.ProductoService;
-// import com.api.e_commerce.dto.ProductoUpdateDTO;
 
 @RestController
 @RequestMapping("/api/productos") //localhost:8080/api/productos del locahost:8080/api/productos/id
@@ -36,22 +42,23 @@ public class ProductoController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/categoria/{categoria}")
-    public List<Producto> getProductoByCategoria(@PathVariable String categoria) {
-        System.out.println("Categoria recibida: " + categoria);
-        return productoService.getProductoByCategoria(categoria);
+    @GetMapping("/categoria/{categoriaId}")
+    public List<ProductoDTO> getProductoByCategoria(@PathVariable Long categoriaId) {
+        System.out.println("Categoria ID recibido en el controller: " + categoriaId);
+        return productoService.getProductoByCategoria(categoriaId);
     }
 
     //https://localhost:8080/api/productos con metodo post http, enviar un body
     @PostMapping
-    public Producto addProducto(@RequestBody Producto producto) {
+    public Producto addProducto(@RequestBody Producto producto) {        
         return productoService.saveProducto(producto);
-    }    //https://localhost:8080/api/productos/1 con metodo put http, enviar un body
-
-    // @PutMapping("/{id}")
-    // public Producto updateProducto(@PathVariable Long id, @RequestBody ProductoUpdateDTO productoDTO) {
-    //     return productoService.updateProducto(id, productoDTO);
-    // }
+    }
+    
+    //https://localhost:8080/api/productos/1 con metodo put http, enviar un body
+    @PutMapping("/{id}")
+    public Producto updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
+        return productoService.updateProducto(id, productoDTO);
+    }
 
     //https://localhost:8080/api/productos/1 con metodo delete http
     @DeleteMapping("/{id}")
