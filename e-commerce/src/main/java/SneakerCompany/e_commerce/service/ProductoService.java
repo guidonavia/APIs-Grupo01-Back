@@ -8,11 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import SneakerCompany.e_commerce.dto.ProductoDTO;
-import SneakerCompany.e_commerce.dto.ProductoDTO;
 import SneakerCompany.e_commerce.model.Producto;
 import SneakerCompany.e_commerce.repository.ProductoRepository;
-// import com.api.e_commerce.dto.ProductoUpdateDTO;
 import lombok.RequiredArgsConstructor;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,15 +32,29 @@ public class ProductoService {
         Producto producto = productoRepository.findById(id).orElse(null);
         
         return ProductoDTO.builder()
+            .id(producto.getId())
             .nombre(producto.getNombre())
             .descripcion(producto.getDescripcion())
             .precio(producto.getPrecio())
             .stock(producto.getStock())
+            .fotos(producto.getFotos())
+            .categoriaId(producto.getCategoria().getId())
             .build();
     }
 
-    public List<Producto> getProductoByCategoria(String categoria) {
-        return productoRepository.findByCategoria(categoria);
+    public List<ProductoDTO> getProductoByCategoria(Long categoriaId) {
+        List<Producto> productos = productoRepository.findByCategoriaId(categoriaId);
+        return productos.stream() // Devuelvo los datos en base a la estructura del DTO
+            .map(producto -> ProductoDTO.builder()
+                .id(producto.getId())
+                .nombre(producto.getNombre())
+                .precio(producto.getPrecio())
+                .descripcion(producto.getDescripcion())
+                .stock(producto.getStock())
+                .fotos(producto.getFotos())
+                .categoriaId(producto.getCategoria().getId())
+                .build())
+            .collect(Collectors.toList());
     }
 
     public Producto saveProducto(Producto producto) {
@@ -51,7 +64,9 @@ public class ProductoService {
 
     public void deleteProducto(Long id) {
         // if(validarCreador()){} else {throw new UnauthorizedException("No tienes permiso para eliminar este producto");}
+        System.out.print("LLEGUE AL SERVICE A BORRAR EL PRODUCTO: " + id);
         productoRepository.deleteById(id);
+        productoRepository.flush(); // Forzar la ejecución de la query
     }
 
     public Producto updateProducto(Long id, ProductoDTO productoDTO) {
