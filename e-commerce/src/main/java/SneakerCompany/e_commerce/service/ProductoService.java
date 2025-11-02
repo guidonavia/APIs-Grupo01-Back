@@ -64,9 +64,7 @@ public class ProductoService {
 
     public void deleteProducto(Long id) {
         // if(validarCreador()){} else {throw new UnauthorizedException("No tienes permiso para eliminar este producto");}
-        System.out.print("LLEGUE AL SERVICE A BORRAR EL PRODUCTO: " + id);
         productoRepository.deleteById(id);
-        productoRepository.flush(); // Forzar la ejecución de la query
     }
 
     public Producto updateProducto(Long id, ProductoDTO productoDTO) {

@@ -57,14 +57,12 @@ public class ProductoController {
     //https://localhost:8080/api/productos/1 con metodo put http, enviar un body
     @PutMapping("/{id}")
     public Producto updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
-        System.out.print("LLEGUE AL CONTROLLER A MODIFICAR EL PRODUCTO: " + id);
         return productoService.updateProducto(id, productoDTO);
     }
 
     //https://localhost:8080/api/productos/1 con metodo delete http
     @DeleteMapping("/{id}")
     public void deleteProducto(@PathVariable Long id) {
-        System.out.print("LLEGUE AL CONTROLLER A BORRAR EL PRODUCTO: " + id);
         productoService.deleteProducto(id);
     }
 }
