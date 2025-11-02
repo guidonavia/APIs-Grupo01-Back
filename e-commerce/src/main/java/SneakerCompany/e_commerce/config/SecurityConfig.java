@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import SneakerCompany.e_commerce.repository.UsuarioRepository;
 import SneakerCompany.e_commerce.security.JwtFilter;
-
-
 import lombok.RequiredArgsConstructor;
 
 // Indica que esta clase contiene configuraciones de Spring
@@ -90,59 +88,21 @@ public class SecurityConfig {
     // Configura las reglas de seguridad para las diferentes rutas de la API
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // http
-        //         .csrf(csrf -> csrf.disable())
-        //         .authorizeHttpRequests(auth -> auth
-        //                 // .requestMatchers("/api/productos/**").permitAll()
-        //                 .requestMatchers("/api/auth/**").permitAll()
-        //                 .anyRequest().authenticated());
-
-        // return http.build();
-
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        // Rutas públicas que no requieren autenticación
-                        //el controller /api/auth puede ser solicitado por cualquier usuario
-                        .requestMatchers("/api/auth/**").permitAll()
-                        //el endpoint /api/productos con metodo get es público, cualquiera puede ver los productos
-                        .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
-
-                        // Rutas que requieren autenticación para modificar productos
-                        //solo los usuarios autenticados pueden crear un producto
-                        .requestMatchers(HttpMethod.POST, "/api/productos").authenticated()
-                        //solo los usuarios autenticados pueden actualizar un producto
-                        .requestMatchers(HttpMethod.PUT, "/api/productos/**").authenticated()
-                        //solo los usuarios autenticados pueden eliminar un producto
-                        .requestMatchers(HttpMethod.DELETE, "/api/productos/**").authenticated()
-
-                        // Rutas exclusivas para administradores
-                        //verifica que el usuario esté autenticado y tenga el rol ADMIN
-                        //TODO: ssanchez - utilizar la clase Role para obtener el enum
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-                        // Rutas de pedidos solo para usuarios autenticados
-                        .requestMatchers("/api/pedidos/**").authenticated()
-
-                        // Ruta de checkout solo para usuarios autenticados
-                        .requestMatchers("/api/checkout/**").authenticated()
-
-                        // Cualquier otra ruta requiere autenticación
-                        // con esta linea abarca requiere que todos los endpoints esten autenticados
-                        // no seía necesario post, put, delete /api/productos , api/pedidos
-                        .anyRequest().authenticated())
-
-                        // insertar un filtro personalizado (su JwtFilter) en la cadena de filtros
-                        // se ejecuta cada vez que se hace una solicitud a un endpoint
-                        // Funcionamiento
-                        // Llegada de la Solicitud: Un cliente envía una solicitud HTTP (por ejemplo, GET /api//products).
-                        // Cadena de Filtros: Spring intercepta la solicitud y la pasa a través de una larga cadena de filtros de seguridad.
-                        // Ejecución del JwtFilter: Como usted lo insertó al inicio de la cadena, su JwtFilter es uno de los primeros en ejecutarse.
-                        // Su método doFilterInternal se ejecuta.
-                        // Si el token es válido: El filtro establece la autenticación en el SecurityContext y llama a filterChain.doFilter(request, response) para pasar la solicitud al siguiente filtro y, finalmente, al controlador.
-                        // Si el token falta o es inválido: El filtro rechaza la solicitud  o deja que la cadena continúe si el endpoint es público.
-                        // Llegada al Controlador: Si el filtro permite el paso, la solicitud finalmente llega a su controlador.
-                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            .cors(cors -> cors.configure(http))  // Enable CORS
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow preflight requests
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/productos").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/productos/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/productos/**").authenticated()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/pedidos/**").authenticated()
+                .requestMatchers("/api/checkout/**").authenticated()
+                .anyRequest().authenticated())
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
