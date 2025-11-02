@@ -28,7 +28,7 @@ public class ProductoController {
 
     //https://localhost:8080/api/productos con metodo get http
     @GetMapping
-    public List<Producto> getAllProductos() {
+    public List<ProductoDTO> getAllProductos() {
         return productoService.getAllProductos();
     }
 
