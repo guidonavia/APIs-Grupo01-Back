@@ -1,5 +1,7 @@
 package SneakerCompany.e_commerce.service;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,21 +33,20 @@ public class CheckoutService {
 
     /**
      * Procesa el checkout de una compra
-     * 1. Valida que el usuario exista
+     * 1. Obtiene el usuario autenticado desde el token JWT
      * 2. Valida que todos los productos existan y tengan stock suficiente
      * 3. Descuenta el stock de los productos
      * 4. Crea el pedido con sus detalles
      * 5. Persiste el pedido en la base de datos
      * 
-     * @param checkoutRequest Request con el usuario y la lista de items a comprar
+     * @param checkoutRequest Request con la lista de items a comprar (el usuario se obtiene del JWT)
      * @return CheckoutResponseDTO con los detalles de la compra realizada
-     * @throws RuntimeException si el usuario no existe, el producto no existe o no hay stock suficiente
+     * @throws RuntimeException si el usuario no está autenticado, el producto no existe o no hay stock suficiente
      */
     public CheckoutResponseDTO procesarCheckout(CheckoutRequestDTO checkoutRequest) {
         
-        // 1. Validar que el usuario existe
-        Usuario usuario = usuarioRepository.findById(checkoutRequest.getUsuarioId())
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + checkoutRequest.getUsuarioId()));
+        // 1. Obtener el usuario autenticado desde el token JWT
+        Usuario usuario = obtenerUsuarioAutenticado();
 
         // 2. Validar items y verificar stock disponible
         List<DetallePedido> detalles = new ArrayList<>();
@@ -129,6 +130,26 @@ public class CheckoutService {
         }
 
         return responseList;
+    }
+
+    /**
+     * Obtiene el usuario autenticado desde el SecurityContextHolder
+     * Extrae el email del token JWT (que está en el Authentication.getName())
+     * y busca el usuario en la base de datos
+     * 
+     * @return Usuario autenticado
+     * @throws RuntimeException si no hay usuario autenticado
+     */
+    private Usuario obtenerUsuarioAutenticado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Usuario no autenticado");
+        }
+        
+        String email = authentication.getName();
+        return usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con email: " + email));
     }
     
 }
