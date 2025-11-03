@@ -32,10 +32,11 @@ public class CheckoutController {
      * Seguridad:
      * - Requiere autenticación JWT (configurado en SecurityConfig)
      * - El token JWT debe enviarse en el header Authorization: Bearer {token}
+     * - El usuario se obtiene automáticamente del token JWT, no se debe enviar en el body
+     * - Solo el usuario autenticado puede realizar compras para sí mismo
      * 
      * Request Body:
      * {
-     *   "usuarioId": 1,
      *   "items": [
      *     {
      *       "productoId": 1,
@@ -58,7 +59,7 @@ public class CheckoutController {
      *   "mensaje": "Compra realizada exitosamente"
      * }
      * 
-     * @param checkoutRequest Request con el usuario y los items a comprar
+     * @param checkoutRequest Request con los items a comprar (el usuario se obtiene del JWT)
      * @return ResponseEntity con los detalles de la compra realizada
      */
     @PostMapping
